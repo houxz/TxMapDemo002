@@ -29,7 +29,7 @@
 <!-- <script src='http://static.emapgo.cn/webjs-sdk/js/emapgo-1.0.0.js'></script> -->
 <script src="resources/js/leaflet/leaflet.js"></script>
 <script src="resources/js/leaflet.ChineseTmsProviders.js"></script>
-<!-- <script src="resources/js/proj4-compressed.js"></script> -->
+<script src="resources/js/proj4-compressed.js"></script>
 <script src="resources/js/proj4leaflet.js"></script>
 <!-- <script src="resources/js/tileLayer.baidu.js" ></script > -->
 <script src="resources/leaflet.awesome-markers-2.0/leaflet.awesome-markers.min.js"></script>
@@ -40,33 +40,31 @@
 var $emgmap = null, $baidumap = null, $gaodemap = null, $tengxunmap = null;
 	var $emgmarker = null, $baidumarker = null, $gaodemarker = null, $tengxunmarker = null;
 
-// 	var normalm = L.titleLayer.chinaProvider('GaoDe.Normal.Map',{
-// 		maxZoom:18,
-// 		minZoom:5});
+	var normalm = L.tileLayer.chinaProvider('GaoDe.Normal.Map',{
+		maxZoom:18,
+		minZoom:5});
 	
-// 	var imgm	=L.titleLayer.chinaProvider('GaoDe.Satellite.Map',{
-// 		maxZoom:18,
-// 		minZoom:5
-// 	});
+	var imgm	=L.tileLayer.chinaProvider('GaoDe.Satellite.Map',{
+		maxZoom:18,
+		minZoom:5
+	});
 	
-// 	var ima = L.titleLayer.chinaProvider('GaoDe.Satellite.Annotion',{
-// 			maxZoom:18,
-// 			minZoom:5
-// 	});
+	var imga = L.tileLayer.chinaProvider('GaoDe.Satellite.Annotion',{
+			maxZoom:18,
+			minZoom:5
+	});
 
-// 	var normal = L.layerGroup([normalm]),image=L.layerGroup([imgm,imga]);
+	var normal = L.layerGroup([normalm]),image=L.layerGroup([imgm,imga]);
 	
-// 	var baseLayers={
-// 			"地图":normal,
-// 			"影响":image,
-// 	}
+	var baseLayers={
+			"地图":normal,
+			"影响":image,
+	}
+	
+
 	
 	
 
-	var tx1=	L.tileLayer.chinaProvider('TengXun.Normal.Map', {
-						subdomains: '0123',
-						tms:true
-					})
 	
 	var lat = 31.363674;
 	var lon = 119.849238;
@@ -84,7 +82,7 @@ var $emgmap = null, $baidumap = null, $gaodemap = null, $tengxunmap = null;
 // 		popup.setLatLng(e.latlng).setContext(
 // 				"you clicked the map at" + e.latlng.toString()).openOn(map);
 		
-		alert("you clicked the map at" + e.latlng.toString() );
+		alert("1you clicked the map at" + e.latlng.toString() );
 	}
 	
 // 	地图上的水滴图标
@@ -95,54 +93,20 @@ var $emgmap = null, $baidumap = null, $gaodemap = null, $tengxunmap = null;
     	iconSize:'35'
   	});
 
-// function drawTengXunMap(lat, lng, zoom) {
-// 		try{
-// 			if ($tengxunmap) {
-// 				$tengxunmap.setView([lat, lng]);
-// 			} else {
-// 				$tengxunmap = L.map('tengxunmap', {
-// 					zoomControl : false,
-// 					center:  [lat, lng],
-// 					zoom: zoom,
-// 					layers : [L.tileLayer.chinaProvider('TengXun.Normal.Map', {
-// 						subdomains: '0123',
-// 						tms:true
-// 					})]
-// 				});
-// 			}
-			
-// 			if ($tengxunmarker) {
-// 				$tengxunmarker.setLatLng([lat, lng]);
-// 			} else {
-// 				$tengxunmarker = L.marker([lat, lng], {icon: matchMarker}).addTo($tengxunmap);
-// 			}
-// 		} catch(e) {
-			
-// 		}
-// 	}
+	
 
-
-// {$'tengxunmap'}.on('click',onMapClick);
 
 function drawTengXunMap(lat, lng, zoom) {
 		try{
-			if ($tengxunmap) {
-				$tengxunmap.setView([lat, lng]);
-			} else {
-				$tengxunmap = L.map('tengxunmap', {
-					zoomControl : false,
-					center:  [lat, lng],
-					zoom: zoom,
-					layers : [tx1]
-				});
-			}
+		
+			hmap.setView([lat, lng]);
+			hmap.setZoom(zoom);
 			
-			$tengxunmap.on('click',onMapClick);
 			
 			if ($tengxunmarker) {
 				$tengxunmarker.setLatLng([lat, lng]);
 			} else {
-				$tengxunmarker = L.marker([lat, lng], {icon: matchMarker}).addTo($tengxunmap);
+				$tengxunmarker = L.marker([lat, lng], {icon: matchMarker}).addTo(hmap);
 			}
 		} catch(e) {
 			
@@ -196,4 +160,81 @@ function drawTengXunMap(lat, lng, zoom) {
 		</div>
 
 </body>
+<script type='text/javascript'>
+	var hmap = L.map("tengxunmap", {
+		center : [ 31.59, 120.29 ],
+		zoom : 12,
+		layers : [ normal ],
+		zoomControl : false
+	});
+
+	L.control.layers(baseLayers, null).addTo(hmap);
+	L.control.zoom({
+		zoomInTitle : "放大",
+		zoomOutTitle : "缩小"
+	}).addTo(hmap);
+	
+	//点击地图弹出坐标位置
+// 	funciton onMapClick(e){
+// 		alter('your click the map at ' + e.latlng );
+// 	}
+	
+	//绑定点击事件
+	hmap.on('click',onMapClick);
+	
+	
+	//弹出事件
+	var popup = L.popup();
+	
+	function onMapClick(e){
+		popup.setLatLng(e.latlng).setContent(
+				"1you clicked the map at" + e.latlng.toString() ).openOn(hmap);
+	}
+	
+	
+	//经纬度事件弹框
+	var lng = null, lat = null;
+	var position  = function(lng, lat){
+		L.marker([lng, lat]).addTo(hmap).bindPopup("当前经纬度：["+lng+","+lat+"]"+"<br>"
+                 +"<button onclick=" + "\"" +"detail("+lng+","+lat+")" +"\""+">地点详情</button>").openPopup();
+
+	}
+	
+	//異步查詢指定經緯度信息
+	function detail(lng,lat){
+		//经纬度查询信息
+		L.marker([lng, lat]).addTo(hmap).bindPopup("名称:"+"国际新城"+"<br>"
+				 +"<b>地点:"+"无锡"+"</b>"+"<br>"
+                 +"<b>联系电话:"+"12306"+"</b>"+"<br>"
+                 +"<button onclick=" + "\"" +"position("+lng+","+lat+")" +"\""+">详情</button>").openPopup();
+		alert("異步查詢指定經緯度信息");
+	}
+	
+	//異步獲取標記點
+	$(function(){
+	
+	var markerArr = [  
+	                    { title: "国际新城", point: "31.62591, 120.2821", address: "无锡", tel: "12306" },  
+	                    { title: "红卫村", point: "31.6224, 120.17052", address: "无锡 ", tel: "18500000000" },  
+	                    { title: "沪宜高速", point: "31.58468, 120.14683", address: "无锡", tel: "18500000000" },  
+	                    { title: "板桥", point: "31.60895, 120.40466", address: "无锡", tel: "18500000000" }  
+	                ]
+	//异步获取数值
+	//...
+ 
+	
+	for (var i = 0; i < markerArr.length; i++) { 
+	    //获取经纬度
+	    var lng = markerArr[i].point.split(",")[0];
+	    var lat = markerArr[i].point.split(",")[1];
+	    //生成新的标记点
+        L.marker([lng,lat]).addTo(hmap).bindPopup("<b>名称:"+markerArr[i].title+"</b>"+"<br>"
+                                                 +"<b>地点:"+markerArr[i].address+"</b>"+"<br>"
+                                                 +"<b>联系电话:"+markerArr[i].tel+"</b>"+"<br>"
+                                                 +"<b><button onclick=" + "\"" +"position("+lng+","+lat+")" +"\""+">当前经纬度</button></b>").openPopup();
+	    
+       } 
+     });
+	
+</script>
 </html>
